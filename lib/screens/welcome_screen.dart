@@ -26,9 +26,24 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     animation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
     controller.forward();
 
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.forward();
+      }
+    });
+
     controller.addListener(() {
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    print('welcome disposed');
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,7 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 Hero(
                   tag: 'logo',
                   child: Container(
-                    height: controller.value * 100,
+                    height: 20.0 + (controller.value * 100),
                     child: Image.asset('images/logo.png'),
                   ),
                 ),
